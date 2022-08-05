@@ -11,27 +11,27 @@ export async function main(ns) {
 
 		let openPorts = 0;
 		if (ns.fileExists("BruteSSH.exe")) {
-			ns.brutessh(server);
+			ns.brutessh(serverName);
 			openPorts++;
 		}
 		if (ns.fileExists("FTPCrack.exe")) {
-			ns.ftpcrack(server);
+			ns.ftpcrack(serverName);
 			openPorts++;
 		}
 		if (ns.fileExists("RelaySMTP.exe")) {
-			ns.relaysmtp(server);
+			ns.relaysmtp(serverName);
 			openPorts++;
 		}
 		if (ns.fileExists("HTTPWorm.exe")) {
-			ns.httpworm(server);
+			ns.httpworm(serverName);
 			openPorts++;
 		}
 		if (ns.fileExists("SQLInject.exe")) {
-			ns.sqlinject(server);
+			ns.sqlinject(serverName);
 			openPorts++;
 		}
-		if (ns.getServerNumPortsRequired(server) <= openPorts) {
-			ns.nuke(server);
+		if (ns.getServerNumPortsRequired(serverName) <= openPorts) {
+			ns.nuke(serverName);
 		}
 
 		let ramAvailable = ns.getServerMaxRam(serverName) - ns.getServerUsedRam(serverName);
