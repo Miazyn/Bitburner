@@ -7,13 +7,18 @@ export async function main(ns) {
         ns.brutessh(target);
     }
     ns.nuke(target);
-    while(true) {
+
+
+    while (true) {
         if (ns.getServerSecurityLevel(target) > securityThresh) {
             await ns.weaken(target);
+            //ns.tprint("Weakened " + target);
         } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
             await ns.grow(target);
+            //ns.tprint("Grew " + target);
         } else {
             await ns.hack(target);
+            //ns.tprint("Hacked " + target);
         }
     }
 }

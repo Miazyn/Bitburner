@@ -1,39 +1,47 @@
 /** @param {NS} ns */
 export async function main(ns) {
 
-	let servers = ns.scan("home");
-	ns.tprint(servers);
-	for (let serverName of servers) {
+	let allServers = [];
+	let serversList = ns.scan("home");
+	let nextServers = [];
+
+	let serverHackName = ns.args[0];
+
+	if (serverHackName == null) {
+		serverHackName = "n00dles";
+	}
+	//GETTING ALL THE SERVERS
+	while (serversList.length > 0) {
+
+		let server = serversList.pop();
+		if (!allServers.includes(server)) {
+			allServers.push(server);
+			nextServers = ns.scan(server);
+			for (var i = 0; i < nextServers.length; i++) {
+				if (!allServers.includes(nextServers[i])) {
+					serversList.push(nextServers[i]);
+				}
+			}
+		}
+	}
+
+	for (let serverName of allServers) {
 
 		await ns.scp("early-hack-template.js", serverName);
 
-		let openPorts = 0;
-		if (ns.fileExists("BruteSSH.exe")) {
-			ns.brutessh(serverName);
-			openPorts++;
-		}
-		if (ns.fileExists("FTPCrack.exe")) {
-			ns.ftpcrack(serverName);
-			openPorts++;
-		}
-		if (ns.fileExists("RelaySMTP.exe")) {
-			ns.relaysmtp(serverName);
-			openPorts++;
-		}
-		if (ns.fileExists("HTTPWorm.exe")) {
-			ns.httpworm(serverName);
-			openPorts++;
-		}
-		if (ns.fileExists("SQLInject.exe")) {
-			ns.sqlinject(serverName);
-			openPorts++;
-		}
-		if (ns.getServerNumPortsRequired(serverName) <= openPorts) {
-			ns.nuke(serverName);
-		}
 		if (ns.hasRootAccess(serverName)) {
+			ns.tprint("------------" + "------------");
+			ns.tprint("Has root access on " + serverName + "!!!");
 			ns.killall(serverName);
+			ns.tprint("Killed all scripts running");
 		}
+		ns.tprint("==========================" + "==========================");
+		ns.tprint("Waiting...");
+		await ns.sleep(200);
 	}
+	ns.tprint("Finished with " + allServers.length);
+	ns.tprint("Booting deployer.js...");
+	await ns.sleep(1000);
+	ns.exec("v3/deployer3.js", "home", 1);
 
 }
