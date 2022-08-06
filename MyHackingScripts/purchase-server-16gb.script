@@ -1,0 +1,19 @@
+var ram = 16;
+
+var i = 0;
+
+while (i < getPurchasedServerLimit()) {
+
+	if (getServerMoneyAvailable("home") > getPurchasedServerCost(ram) * 1.5) {
+		var hostname = purchaseServer("pserv-" + i, ram);
+		scp("early-hack-template.script", hostname);
+		exec("early-hack-template.script", hostname, 3);
+		i++;
+		alert("Purchased Server");
+	}
+
+
+}
+alert("Purchased all servers");
+
+exit();

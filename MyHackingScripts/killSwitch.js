@@ -2,9 +2,7 @@
 export async function main(ns) {
 
 	let servers = ns.scan("home");
-	let serverHackName = "n00dles";
 	ns.tprint(servers);
-
 	for (let serverName of servers) {
 
 		await ns.scp("early-hack-template.js", serverName);
@@ -33,20 +31,9 @@ export async function main(ns) {
 		if (ns.getServerNumPortsRequired(serverName) <= openPorts) {
 			ns.nuke(serverName);
 		}
-
-		let ramAvailable = ns.getServerMaxRam(serverName) - ns.getServerUsedRam(serverName);
-		let ramPerThread = ns.getScriptRam("early-hack-template.js");
-
-		let threads = Math.floor(ramAvailable / ramPerThread);
-
-
 		if (ns.hasRootAccess(serverName)) {
-			if (threads === 0) {
-				ns.exec("early-hack-template.js", serverName, 1, serverHackName);
-			} else {
-
-				ns.exec("early-hack-template.js", serverName, threads, serverHackName);
-			}
+			ns.killall(serverName);
 		}
 	}
+
 }
